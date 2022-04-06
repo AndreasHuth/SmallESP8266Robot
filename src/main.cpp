@@ -41,10 +41,8 @@ void loop(void) {
       SameStateCount++;
       if (SameStateCount >= FailSaveTime) {
         stopMotor();
-        //digitalWrite(2, LOW);
-      }
+        }
     } else {
-      //digitalWrite(2, HIGH);
       SameStateCount = 0;
       S1_6_flag = false;
     }

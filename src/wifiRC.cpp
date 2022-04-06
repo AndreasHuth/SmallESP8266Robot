@@ -20,10 +20,6 @@
 #include "defines.h"
 #include "globals.h"
 
-#define DEBUG
-#define DEBUG1
-
-
 ESP8266WebServer server(80);    // Create a webserver object that listens for HTTP request on port 80
 WebSocketsServer webSocket = WebSocketsServer(81);    // create a websocket server on port 81
 
@@ -33,23 +29,13 @@ bool S1_6_flag = false;
 word SameStateCount = 0; //counter of non changed states - failsave
 char S1_buff[3];//servo socket buffer
 char S2_buff[3];
-char S3_buff[3];
-char S4_buff[3];
-char S5_buff[3];
-char S6_buff[3];
 
-
-byte RCmode = 0;
 byte FailSaveTime = 5;
 
-char  RCname[64] = "";
 char  RCSSID[64] = "SSID";//WiFi.macAddress().ToString()+" (miharix.eu)";
 char  RCPASS[64] = "miharix.eu";
 
-//char  RCSSID[64] = "S55MX 2,4Ghz"; //WiFi.macAddress()+" (miharix.eu)";
-//char  RCPASS[64] = "mihamiha";
-
-bool WiFiAP = true; //make WiFi AP 1 or connect to wifi 0
+bool WiFiAP = true;             //make WiFi AP 1 or connect to wifi 0
 bool factory_boot = false;
 
 bool ResetToFactoryFlag = false;
@@ -108,9 +94,7 @@ void ResetToFactory() {
 }
 
 void print_variables() {
-  PRINTLN(RCmode);
   PRINTLN(FailSaveTime);
-  PRINTLN(RCname);
   PRINTLN(RCSSID);
   PRINTLN(RCPASS);
   PRINTLN(WiFiAP);
@@ -152,8 +136,6 @@ bool saveConfig() {
   }
   json["Pass"] = RCPASS;
   json["WiFiAP"] = WiFiAP;
-  json["RCname"] = RCname;
-  json["Mode"] = RCmode;
   json["Ftime"] = FailSaveTime;
 
   if (json.prettyPrintTo(configFile) == 0) {
@@ -173,24 +155,22 @@ bool loadConfig() {
   if (!configFile) {
     return false;
   }
-
   size_t size = configFile.size();
 
 #ifdef DEBUG1
+  Serial.print("Size: ");
   Serial.println(size);
 #endif
   if (size > 1124) {
 #ifdef DEBUG1
     Serial.println("Config to big");
 #endif
-
-
     return false;
   }
-
   std::unique_ptr<char[]> buf(new char[size]);
   configFile.readBytes(buf.get(), size);
 #ifdef DEBUG
+  Serial.println("buffer: ");
   Serial.println(buf.get());
 #endif
   StaticJsonBuffer<1124> jsonBuffer;
@@ -203,12 +183,10 @@ bool loadConfig() {
   }
   configFile.close();//close the file
 
-  RCmode = json["Mode"];
   FailSaveTime = json["Ftime"];
 
-  strlcpy(RCname, json["RCname"], sizeof(RCname));
 #ifdef DEBUG1
-  Serial.println(RCSSID);
+  // Serial.println(RCSSID);
 #endif
   if (json["SSID"] != "SSID") {
     strlcpy(RCSSID, json["SSID"], sizeof(RCSSID));
@@ -227,11 +205,8 @@ bool loadConfig() {
     factory_boot = true; //first time boot -> on root go to FAQ.html
   }
 
-
   print_variables();
-
   return true;
-
 }
 
 void rebooESP(String filename) {
@@ -253,161 +228,10 @@ void handleargs() { //handle http_get arguments
   }
   //update temp variables
 
-  if (server.hasArg("s1r")) {
-    //invert_servo1 = server.arg("s1r");
-  } else {
-    //invert_servo1 = false;
-  }
-  if (server.hasArg("s2r")) {
-    //invert_servo2 = server.arg("s2r");
-  } else {
-    //invert_servo2 = false;
-  }
-  if (server.hasArg("s3r")) {
-    //invert_servo3 = server.arg("s3r");
-  } else {
-    //invert_servo3 = false;
-  }
-  if (server.hasArg("s4r")) {
-    //invert_servo4 = server.arg("s4r");
-  } else {
-    //invert_servo4 = false;
-  }
-  if (server.hasArg("s5r")) {
-    //invert_servo5 = server.arg("s5r");
-  } else {
-    //invert_servo5 = false;
-  }
-  if (server.hasArg("s6r")) {
-    //invert_servo6 = server.arg("s6r");
-  } else {
-    //invert_servo6 = false;
-  }
-
-  if (server.hasArg("s1f")) {
-    //failSaveServo1 = server.arg("s1f").toInt();
-  }
-  if (server.hasArg("s2f")) {
-    //failSaveServo2 = server.arg("s2f").toInt();
-  }
-  if (server.hasArg("s3f")) {
-    //failSaveServo3 = server.arg("s3f").toInt();
-  }
-  if (server.hasArg("s4f")) {
-    //failSaveServo4 = server.arg("s4f").toInt();
-  }
-  if (server.hasArg("s5f")) {
-    //failSaveServo5 = server.arg("s5f").toInt();
-  }
-  if (server.hasArg("s6f")) {
-    //failSaveServo6 = server.arg("s6f").toInt();
-  }
-
-  if (server.hasArg("s1x")) {
-    //maxRangeServo1 = server.arg("s1x").toInt();
-  }
-  if (server.hasArg("s2x")) {
-    //maxRangeServo2 = server.arg("s2x").toInt();
-  }
-  if (server.hasArg("s3x")) {
-    //maxRangeServo3 = server.arg("s3x").toInt();
-  }
-  if (server.hasArg("s4x")) {
-    //maxRangeServo4 = server.arg("s4x").toInt();
-  }
-  if (server.hasArg("s5x")) {
-    //maxRangeServo5 = server.arg("s5x").toInt();
-  }
-  if (server.hasArg("s6x")) {
-    //maxRangeServo6 = server.arg("s6x").toInt();
-  }
-
-  if (server.hasArg("s1n")) {
-    //minRangeServo1 = server.arg("s1n").toInt();
-  }
-  if (server.hasArg("s2n")) {
-    //minRangeServo2 = server.arg("s2n").toInt();
-  }
-  if (server.hasArg("s3n")) {
-    //minRangeServo3 = server.arg("s3n").toInt();
-  }
-  if (server.hasArg("s4n")) {
-    //minRangeServo4 = server.arg("s4n").toInt();
-  }
-  if (server.hasArg("s5n")) {
-    //minRangeServo5 = server.arg("s5n").toInt();
-  }
-  if (server.hasArg("s6n")) {
-    //minRangeServo6 = server.arg("s6n").toInt();
-  }
-
-  if (server.hasArg("s1t")) {
-    //TrimServo1 = server.arg("s1t").toInt();
-  }
-  if (server.hasArg("s2t")) {
-    //TrimServo2 = server.arg("s2t").toInt();
-  }
-  if (server.hasArg("s3t")) {
-    //TrimServo3 = server.arg("s3t").toInt();
-  }
-  if (server.hasArg("s4t")) {
-    //TrimServo4 = server.arg("s4t").toInt();
-  }
-  if (server.hasArg("s5t")) {
-    //TrimServo5 = server.arg("s5t").toInt();
-  }
-  if (server.hasArg("s6t")) {
-    //TrimServo6 = server.arg("s6t").toInt();
-  }
-
-  if (server.hasArg("s1e")) {
-    //ExpoServo1 = server.arg("s1e").toInt();
-  }
-  if (server.hasArg("s2e")) {
-    //ExpoServo2 = server.arg("s2e").toInt();
-  }
-  if (server.hasArg("s3e")) {
-    //ExpoServo3 = server.arg("s3e").toInt();
-  }
-  if (server.hasArg("s4e")) {
-    //ExpoServo4 = server.arg("s4e").toInt();
-  }
-  if (server.hasArg("s5e")) {
-    //ExpoServo5 = server.arg("s5e").toInt();
-  }
-  if (server.hasArg("s6e")) {
-    //ExpoServo6 = server.arg("s6e").toInt();
-  }
-
-  if (server.hasArg("s1s")) {
-    //RateServo1 = server.arg("s1s").toInt();
-  }
-  if (server.hasArg("s2s")) {
-    //RateServo2 = server.arg("s2s").toInt();
-  }
-  if (server.hasArg("s3s")) {
-    //RateServo3 = server.arg("s3s").toInt();
-  }
-  if (server.hasArg("s4s")) {
-    //RateServo4 = server.arg("s4s").toInt();
-  }
-  if (server.hasArg("s5s")) {
-    //RateServo5 = server.arg("s5s").toInt();
-  }
-  if (server.hasArg("s6s")) {
-    //RateServo6 = server.arg("s6s").toInt();
-  }
-
-  if (server.hasArg("Mode")) {
-    RCmode = server.arg("Mode").toInt();
-  }
   if (server.hasArg("Ftime")) {
     FailSaveTime = server.arg("Ftime").toInt();
   }
-  if (server.hasArg("rcname")) {
-    server.arg("rcname").toCharArray(RCname, sizeof(RCname));
-    //RCname = server.arg("rcname").c_str();
-  }
+
   if (server.hasArg("RCSSID")) {
     char  RCSSID_temp[64] = "SSID_temp";
     server.arg("RCSSID").toCharArray(RCSSID_temp, sizeof(RCSSID_temp));
@@ -451,10 +275,10 @@ void handleargs() { //handle http_get arguments
 #ifdef DEBUG1
         Serial.println("REBOOT");
 #endif
-        rebooESP("/reboot.html");
+        //rebooESP("/reboot.html");
         break;
       case 4:
-        rebooESP("/restore.html");
+        //rebooESP("/restore.html");
         ResetToFactoryFlag = true;
         ResetToFactory();
 #ifdef DEBUG1
@@ -467,17 +291,14 @@ void handleargs() { //handle http_get arguments
           Serial.println("EEPROM saved");//save temp variables to json file
           Serial.println("SET WiFi restarting");
 #endif
-          rebooESP("/SSID_pass.html");
+          //rebooESP("/SSID_pass.html");
         } else {
-          rebooESP("/reboot.html");
+          //rebooESP("/reboot.html");
         }
 
         break;
     }
-
   }
-
-
 }
 
 bool handleFileRead(String path) { // send the right file to the client (if it exists)
@@ -500,18 +321,15 @@ bool handleFileRead(String path) { // send the right file to the client (if it e
   String contentType = getContentType(path);             // Get the MIME type
   String pathWithGz = path + ".gz";
   String pathWithHtml = path + ".html";
-  String pathWithRCmode = path + String(RCmode) + ".html";
 
 
-  if (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path) || SPIFFS.exists(pathWithHtml) || SPIFFS.exists(pathWithRCmode)) { // If the file exists, either as a compressed archive, or normal
+  if (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path) || SPIFFS.exists(pathWithHtml)) { // If the file exists, either as a compressed archive, or normal
     if (SPIFFS.exists(pathWithGz)) {                        // If there's a compressed version available
       path += ".gz";
     } else {                         // Use the compressed version
       if (SPIFFS.exists(pathWithHtml)) {
         path += ".html";
       } else {
-        if (SPIFFS.exists(pathWithRCmode))
-          path += String(RCmode) + ".html";
       }
     }
     File file = SPIFFS.open(path, "r");                    // Open the file
@@ -539,7 +357,7 @@ void initRC (void)
   SPIFFS.begin();                           // Start the SPI Flash Files System
   loadConfig();
   delay(10);
-  // WiFi.disconnect();  //erese old ssid password
+
 
   if (!WiFiAP) { //Connect to wifi
     WiFi.begin(RCSSID, RCPASS);
@@ -558,7 +376,6 @@ void initRC (void)
         ResetToFactory();
       }
       NC_count++;
-
     }
 #ifdef DEBUG1
     Serial.println('\n');
@@ -571,7 +388,7 @@ void initRC (void)
     WiFi.softAP(RCSSID, RCPASS);             // Start the access point
 #ifdef DEBUG1
     Serial.print(RCSSID);
-    Serial.print("Access Point \"");
+    Serial.print(" Access Point \"");
     Serial.println("\" started");
     Serial.print("IP address:\t");
     Serial.println(WiFi.softAPIP());         // Send the IP address of the ESP8266 to the computer
@@ -593,24 +410,15 @@ void initRC (void)
   });
 
   server.begin();                           // Actually start the server
-#ifdef DEBUG
+#ifdef DEBUG1
   Serial.println("HTTP server started");
 #endif
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
-#ifdef DEBUG
+#ifdef DEBUG1
   Serial.println("websocket server started");
 #endif
 
-/*
-  pinMode(2, OUTPUT);
-  for (uint8_t t = 4; t > 0; t--) { //blink on boot
-    digitalWrite(2, HIGH);
-    delay(50);
-    digitalWrite(2, LOW);
-    delay(50);
-  }
-*/
   // Add service to MDNS
   MDNS.addService("http", "tcp", 80);
   MDNS.addService("ws", "tcp", 81);
@@ -630,7 +438,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       Serial.printf("[%u] Disconnected!\n", num);
 #endif
       connected = false; 
-      //digitalWrite(2, LOW);
 
       break;
     case WStype_CONNECTED: {
@@ -657,22 +464,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         memcpy(S1_buff, &payload[1], 2 );
         // S1_buff[3] = '\0';
 
-
         memcpy(S2_buff, &payload[3], 2 );
         //     S2_buff[3] = '\0';
-
-        memcpy(S3_buff, &payload[5], 2 );
-        //   S3_buff[3] = '\0';
-
-        memcpy(S4_buff, &payload[7], 2 );
-        //  S4_buff[3] = '\0';
-
-        memcpy(S5_buff, &payload[9], 2 );
-        //S5_buff[3] = '\0';
-
-        memcpy(S6_buff, &payload[11], 2 );
-        //S6_buff[3] = '\0';
-
+        
         S1_6_flag = true;
 
         if (S1_buff[0] == '-') { //prevent buffer owerflow
@@ -683,23 +477,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
           S2_buff[0] = '0';
           S2_buff[1] = '0';
         }
-        if (S3_buff[0] == '-') {
-          S3_buff[0] = '0';
-          S3_buff[1] = '0';
-        }
-        if (S4_buff[0] == '-') {
-          S4_buff[0] = '0';
-          S4_buff[1] = '0';
-        }
-        if (S5_buff[0] == '-') {
-          S5_buff[0] = '0';
-          S5_buff[1] = '0';
-        }
-        if (S6_buff[0] == '-') {
-          S6_buff[0] = '0';
-          S6_buff[1] = '0';
-        }
-      }
+       }
       break;
     case WStype_ERROR: break;
     case WStype_BIN: break;

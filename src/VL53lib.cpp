@@ -27,11 +27,13 @@ uint16_t VL53L0Xloop(void)
    uint16_t value; 
 
   value = sensor.readRangeContinuousMillimeters();
-  Serial.print(value);
-  if (sensor.timeoutOccurred()) { Serial.print(" TIMEOUT"); }
 
-  Serial.println();
+  #ifdef DEBUG
+    Serial.print(value);
+    if (sensor.timeoutOccurred()) { Serial.print(" TIMEOUT"); }
 
+    Serial.println();
+  #endif
+  
   return value;
-
 }

@@ -33,9 +33,9 @@
 #define TELEMETRY_ANGLE 1
 //#define TELEMETRY_DEBUG 1  // Dont use TELEMETRY_ANGLE and TELEMETRY_DEBUG at the same time!
 
+//#define DEBUG
+#define DEBUG1
 #define DEBUG2
-//#define DEBUG1
-//#define DEBUG0
 
 #define PRINTLN(var) Serial.print(#var ": "); Serial.println(var)
 

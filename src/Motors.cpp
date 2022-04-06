@@ -71,19 +71,21 @@ void CalcSetMotorSpeed (bool disappear)
     leftMotor = throttle+direction;
     rightMotor = throttle-direction;
 
+  #ifdef DEBUG
     //print the initial mix results
     Serial.print("LIN:"); Serial.print( leftMotor, DEC);
     Serial.print(", RIN:"); Serial.print( rightMotor, DEC);
-
+  #endif
     //calculate the scale of the results in comparision base 8 bit PWM resolution
     leftMotorScale =  leftMotor/1000.0;
     leftMotorScale = abs(leftMotorScale);
     rightMotorScale =  rightMotor/1000.0;
     rightMotorScale = abs(rightMotorScale);
 
+  #ifdef DEBUG
     Serial.print("| LSCALE:"); Serial.print( leftMotorScale,2);
     Serial.print(", RSCALE:"); Serial.print( rightMotorScale,2);
-
+  #endif
     //choose the max scale value if it is above 1
     maxMotorScale = max(leftMotorScale,rightMotorScale);
     maxMotorScale = max((float)1.0,maxMotorScale);
@@ -92,19 +94,23 @@ void CalcSetMotorSpeed (bool disappear)
     leftMotorScaled = constrain(leftMotor/maxMotorScale,-1000,1000);
     rightMotorScaled = constrain(rightMotor/maxMotorScale,-1000,1000);
 
+  #ifdef DEBUG
     Serial.print("| LOUT:"); Serial.print( leftMotorScaled);
     Serial.print(", ROUT:"); Serial.print( rightMotorScaled);
 
     Serial.print(" |");
+  #endif
 
     //apply the results to appropriate uC PWM outputs for the LEFT motor:
     if(abs(leftMotorScaled)>deadZone)
     {
         if (leftMotorScaled > 0)
         {
+          #ifdef DEBUG
             Serial.print("F");
             Serial.print(abs(leftMotorScaled),DEC);
-    
+          #endif
+          
             if (!disappear){
                 digitalWrite(PIN_MOTOR1_DIR, LOW);
                 analogWrite(PIN_MOTOR1_PWM, abs(leftMotorScaled));       
@@ -117,9 +123,11 @@ void CalcSetMotorSpeed (bool disappear)
 
         }
         else 
-        {
+        {          
+      #ifdef DEBUG
         Serial.print("R");
         Serial.print(abs(leftMotorScaled),DEC);
+      #endif
 
         digitalWrite(PIN_MOTOR1_DIR, HIGH);
         analogWrite(PIN_MOTOR1_PWM, 1000-abs(leftMotorScaled));
@@ -127,7 +135,9 @@ void CalcSetMotorSpeed (bool disappear)
     }  
     else 
     {
-    Serial.print("IDLE");
+  #ifdef DEBUG       
+    Serial.print("IDLE");   
+  #endif
     digitalWrite(PIN_MOTOR1_DIR, LOW);
     digitalWrite(PIN_MOTOR1_PWM, LOW);
     } 
@@ -137,10 +147,12 @@ void CalcSetMotorSpeed (bool disappear)
     {
 
         if (rightMotorScaled > 0)
-        {
+        {  
+          #ifdef DEBUG  
             Serial.print("F");
             Serial.print(abs(rightMotorScaled),DEC);
-
+          #endif
+          
             if (!disappear){
                 digitalWrite(PIN_MOTOR2_DIR, LOW);
                 analogWrite(PIN_MOTOR2_PWM, abs(rightMotorScaled));
@@ -152,9 +164,11 @@ void CalcSetMotorSpeed (bool disappear)
             }
         }
         else 
-        {
+        {   
+          #ifdef DEBUG  
             Serial.print("R");
             Serial.print(abs(rightMotorScaled),DEC);
+          #endif
 
             digitalWrite(PIN_MOTOR2_DIR, HIGH);
             analogWrite(PIN_MOTOR2_PWM, 1024-abs(rightMotorScaled));
@@ -162,14 +176,17 @@ void CalcSetMotorSpeed (bool disappear)
     }  
     else 
     {
+  #ifdef DEBUG          
     Serial.print("IDLE");
+  #endif
+    
     digitalWrite(PIN_MOTOR2_DIR, LOW);
     digitalWrite(PIN_MOTOR2_PWM, LOW);
     } 
 
+  #ifdef DEBUG  
     Serial.println("");
+  #endif
 
   //To do: throttle change limiting, to avoid radical changes of direction for large DC motors
-
-
 }

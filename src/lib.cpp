@@ -40,8 +40,11 @@ void buzzerOn200ms(void)
 int getLipoVoltage(void)
 {
     int help = analogRead(A0);
+
+    #ifdef DEBUG
     Serial.print("ADC: ");
     Serial.println(help);
+    #endif
 
     /*********************************************************
      * ULipo = ADC  *  (100k + 220k) / 100k  *  (10k + 10k) / 10k  *   1V /1023 
@@ -52,10 +55,13 @@ int getLipoVoltage(void)
 
     float voltage = (float) help;
     voltage *= U_FACTOR;
+    
+    #ifdef DEBUG
     Serial.print("U: ");
     Serial.println(voltage);
+    #endif
+
     if (voltage < 3.0)
         buzzerOn200ms();
-
     return voltage;
 }

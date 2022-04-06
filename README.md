@@ -29,9 +29,11 @@ final robot :-)
 
 ![](https://github.com/AndreasHuth/SmallESP8266Robot/blob/master/3D_files/smallESP8266Robot_3D_pic1.png)
 
-link to the schematic: 
+link to the schematic:
+
 https://github.com/AndreasHuth/SmallESP8266Robot/blob/master/schematic/Schematic_SmallESP8266Robot.pdf
 
-and partlist: 
+and partlist:
+
 https://github.com/AndreasHuth/SmallESP8266Robot/blob/master/partlist/part_overview.txt
 
