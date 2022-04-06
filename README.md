@@ -16,6 +16,5 @@ Needed packages:
 tbd.
 
 
-![](https://github.com/AndreasHuth/NTPClockMqtt/blob/master/20200721_212939_.jpg)
-https://github.com/AndreasHuth/SmallESP8266Robot/blob/master/pics/picture1.jpg
+![](https://github.com/AndreasHuth/SmallESP8266Robot/blob/master/pics/picture1.jpg)
 
