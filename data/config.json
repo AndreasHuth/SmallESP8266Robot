@@ -1,0 +1,17 @@
+{
+  "SSID": "robot",
+  "Pass": "",
+  "WiFiAP": true,
+  "RCname": "V4.16",
+  "Mode":16,
+  "Ftime":5,
+  "Servo1": {
+    "max": 2000,
+    "min": 700,
+    "trim": 0,
+    "failsave": 1000,
+    "expo": 15,
+    "rate": 0,
+    "reverse": false
+  }
+}
