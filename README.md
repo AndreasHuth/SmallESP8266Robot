@@ -1,15 +1,14 @@
 # Small ESP8266 Robot
 ## Short Description
-Template code to support wifi &amp; ota &amp; mqtt ESP8266 / wemos D1
+This is a small 2-wheel robot project. Normally not very special. 😉
 
+But there some special topics (at least for me 😊)
 
-3d model
-Bild
-Material Liste
-C Code....
-Schaltplan
-Kurze Beschreibung 
-
+My first project with a self developed PCB (made in China)
+Usage of standard components (easy to get and therefore cheap)
+Design with a standard 18650 Lipo (charging with a USB-C connector)
+3d printed chassis with a nice design (made by me)
+Usage of an ESP8266 (Wemos D1 mini) with some special features: - programming via micro usb interface - Wifi access point to control the robot (very nice easy web-interface) Please have a look @ this repository 😊
 
 ## How to use
 Please download the whole project and open it direktly in Visual Studio Code. 
