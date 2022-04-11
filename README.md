@@ -1,6 +1,7 @@
 # Small ESP8266 Robot
 ## Short Description
 This is a small 2-wheel robot project. Normally not very special. 😉
+<<<<<<< HEAD
 
 But there some special topics (at least for me 😊)
 
@@ -9,6 +10,19 @@ Usage of standard components (easy to get and therefore cheap)
 Design with a standard 18650 Lipo (charging with a USB-C connector)
 3d printed chassis with a nice design (made by me)
 Usage of an ESP8266 (Wemos D1 mini) with some special features: - programming via micro usb interface - Wifi access point to control the robot (very nice easy web-interface) Please have a look @ this repository 😊
+=======
+ 
+But there some special topics (at least for me 😊)
+- My first project with a self developed PCB (made in China)
+- Usage of standard components (easy to get and therefore cheap)
+- Design with a standard 18650 Lipo (charging with a USB-C connector)
+- 3d printed chassis with a nice design (made by me)
+- Usage of an ESP8266 (Wemos D1 mini) with some special features:
+        - programming via micro usb interface
+        - Wifi access point to control the robot (very nice easy web-interface)
+                Please have a look @ this repository 😊
+
+>>>>>>> 50824eb9ed5bb71b4741af57fbbcb809eb23ab32
 
 ## How to use
 Please download the whole project and open it direktly in Visual Studio Code. 
@@ -23,8 +37,6 @@ Needed packages:
 ## Links
 
 https://github.com/miharix/miharix-wifi-rc
-
-
 
 
 ## further informations / pictures
